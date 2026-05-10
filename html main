@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agastya Singh Rathore</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;700&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  /* ── THEME TOKENS ── */
+  [data-theme="dark"] {
+    --bg: #0d0d0d;
+    --surface: #161616;
+    --surface2: #1e1e1e;
+    --border: rgba(255,255,255,0.07);
+    --white: #efefef;
+    --dim: rgba(239,239,239,0.38);
+    --gold: #c9a84c;
+    --shadow: rgba(0,0,0,0.5);
+  }
+  [data-theme="light"] {
+    --bg: #f5f3ef;
+    --surface: #eceae5;
+    --surface2: #e2e0da;
+    --border: rgba(0,0,0,0.08);
+    --white: #111111;
+    --dim: rgba(17,17,17,0.45);
+    --gold: #a07828;
+    --shadow: rgba(0,0,0,0.12);
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Syne', sans-serif;
+    overflow-x: hidden;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.3rem 3rem;
+    background: rgba(13,13,13,0.88);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+    transition: background 0.3s;
+  }
+  [data-theme="light"] nav { background: rgba(245,243,239,0.88); }
+  .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; letter-spacing: 0.12em; color: var(--white); }
+  .nav-right { display: flex; align-items: center; gap: 2rem; }
+  .nav-links { display: flex; gap: 2rem; }
+  .nav-links a {
+    font-family: 'DM Mono', monospace; font-size: 0.65rem;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--dim); text-decoration: none; transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--white); }
+
+  /* Theme toggle */
+  .theme-btn {
+    width: 36px; height: 20px; border-radius: 10px;
+    background: var(--surface2); border: 1px solid var(--border);
+    cursor: pointer; position: relative; transition: background 0.3s;
+    flex-shrink: 0;
+  }
+  .theme-btn::after {
+    content: '';
+    position: absolute; top: 2px; left: 2px;
+    width: 14px; height: 14px; border-radius: 50%;
+    background: var(--gold);
+    transition: transform 0.3s;
+  }
+  [data-theme="light"] .theme-btn::after { transform: translateX(16px); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh; display: flex; flex-direction: column;
+    justify-content: flex-end; padding: 0 3rem 5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace; font-size: 0.65rem;
+    letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 1.5rem;
+    opacity: 0; animation: up 0.6s ease 0.1s forwards;
+  }
+  .hero-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(4.5rem, 10vw, 10rem); line-height: 0.88;
+    opacity: 0; animation: up 0.6s ease 0.25s forwards;
+  }
+  .hero-row {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-top: 3rem; opacity: 0; animation: up 0.6s ease 0.4s forwards;
+  }
+  .hero-bio { max-width: 360px; font-size: 0.88rem; line-height: 1.75; color: var(--dim); }
+  .hero-stats { display: flex; gap: 3rem; }
+  .stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 2.2rem; color: var(--white); line-height: 1; display: block; }
+  .stat-label { font-family: 'DM Mono', monospace; font-size: 0.58rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--dim); display: block; margin-top: 0.2rem; }
+
+  /* ── TICKER ── */
+  .ticker { overflow: hidden; border-bottom: 1px solid var(--border); padding: 0.85rem 0; background: var(--surface); }
+  .ticker-track { display: inline-flex; gap: 2.5rem; white-space: nowrap; animation: ticker 24s linear infinite; }
+  .ticker-item { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--dim); }
+  .ticker-item.hl { color: var(--gold); }
+  @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* ── SECTIONS ── */
+  section { padding: 6rem 3rem; border-bottom: 1px solid var(--border); }
+  .label { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--dim); margin-bottom: 1rem; }
+  .section-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.5rem, 4vw, 4rem); line-height: 1; margin-bottom: 3rem; }
+
+  /* ── WHAT I CREATE ── */
+  .create-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1px; background: var(--border); border: 1px solid var(--border);
+  }
+  .create-card {
+    background: var(--bg); padding: 2rem 1.8rem;
+    transition: background 0.25s; position: relative; overflow: hidden;
+  }
+  .create-card:hover { background: var(--surface); }
+  .create-emoji { font-size: 2rem; margin-bottom: 1rem; display: block; }
+  .create-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: 0.04em; margin-bottom: 0.5rem; }
+  .create-desc { font-size: 0.82rem; line-height: 1.7; color: var(--dim); }
+
+  /* ── YOUTUBE EMBED ── */
+  .yt-section { background: var(--bg); }
+  .yt-wrap {
+    position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;
+    border: 1px solid var(--border); margin-top: 0;
+  }
+  .yt-wrap iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+  .yt-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 1.2rem; }
+  .yt-channel { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.12em; color: var(--dim); }
+  .yt-link {
+    font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--gold); text-decoration: none;
+    border-bottom: 1px solid var(--gold); padding-bottom: 0.1rem; transition: opacity 0.2s;
+  }
+  .yt-link:hover { opacity: 0.7; }
+
+  /* ── COLLABS ── */
+  .collab-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); }
+  .collab-card { background: var(--bg); padding: 2.5rem; display: flex; gap: 2rem; align-items: flex-start; transition: background 0.25s; }
+  .collab-card:hover { background: var(--surface); }
+  .logo-wrap { flex-shrink: 0; width: 76px; height: 76px; }
+  .logo-wrap svg { width: 76px; height: 76px; }
+  .collab-brand { font-family: 'Bebas Neue', sans-serif; font-size: 1.9rem; letter-spacing: 0.04em; line-height: 1; margin-bottom: 0.3rem; }
+  .collab-origin { font-family: 'DM Mono', monospace; font-size: 0.58rem; letter-spacing: 0.15em; color: var(--gold); margin-bottom: 1rem; }
+  .collab-desc { font-size: 0.83rem; line-height: 1.75; color: var(--dim); }
+  .collab-tags { display: flex; gap: 0.5rem; margin-top: 1.2rem; flex-wrap: wrap; }
+  .tag { font-family: 'DM Mono', monospace; font-size: 0.57rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--dim); border: 1px solid var(--border); padding: 0.2rem 0.55rem; }
+
+  /* ── ABOUT ── */
+  .about-grid { display: grid; grid-template-columns: auto 1fr; gap: 5rem; align-items: start; }
+  .about-num { font-family: 'Bebas Neue', sans-serif; font-size: clamp(6rem, 12vw, 12rem); line-height: 1; color: transparent; -webkit-text-stroke: 1px rgba(128,128,128,0.2); }
+  .about-text { font-size: 0.9rem; line-height: 1.8; color: var(--dim); margin-bottom: 1rem; }
+  .about-text strong { color: var(--white); font-weight: 700; }
+  .facts { list-style: none; display: flex; flex-direction: column; gap: 0.65rem; margin-top: 1.5rem; }
+  .facts li { font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.07em; color: var(--dim); padding-left: 1.2rem; position: relative; }
+  .facts li::before { content: '—'; position: absolute; left: 0; color: var(--gold); }
+
+  /* ── GEAR ── */
+  .gear-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+  .gear-row { background: var(--bg); padding: 1.4rem 1.8rem; display: flex; justify-content: space-between; align-items: center; transition: background 0.25s; }
+  .gear-row:hover { background: var(--surface); }
+  .gear-category { font-family: 'DM Mono', monospace; font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--dim); margin-bottom: 0.3rem; }
+  .gear-name { font-family: 'Syne', sans-serif; font-size: 0.92rem; font-weight: 700; color: var(--white); }
+  .gear-icon { font-size: 1.5rem; opacity: 0.6; }
+
+  /* ── PLATFORMS ── */
+  .platform-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); }
+  .platform-card { background: var(--bg); padding: 2.5rem; transition: background 0.25s; }
+  .platform-card:hover { background: var(--surface); }
+  .platform-name { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--dim); margin-bottom: 1rem; }
+  .platform-num { font-family: 'Bebas Neue', sans-serif; font-size: 4rem; line-height: 1; color: var(--white); }
+  .platform-sub { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em; color: var(--dim); margin-top: 0.4rem; }
+
+  /* ── COLLAB FORM ── */
+  .form-section { background: var(--surface); }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0; }
+  .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+  .form-group.full { grid-column: 1 / -1; }
+  .form-label { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--dim); }
+  .form-input, .form-select, .form-textarea {
+    background: var(--bg); border: 1px solid var(--border);
+    color: var(--white); font-family: 'Syne', sans-serif; font-size: 0.85rem;
+    padding: 0.75rem 1rem; outline: none; transition: border-color 0.2s;
+    appearance: none; -webkit-appearance: none;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--gold); }
+  .form-textarea { resize: vertical; min-height: 110px; }
+  .form-select { cursor: pointer; }
+  .form-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; grid-column: 1/-1; }
+  .form-note { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em; color: var(--dim); }
+  .form-success {
+    display: none; grid-column: 1/-1; text-align: center;
+    padding: 1.5rem; border: 1px solid var(--gold);
+    font-family: 'DM Mono', monospace; font-size: 0.75rem;
+    letter-spacing: 0.12em; color: var(--gold);
+  }
+
+  /* ── CONTACT ── */
+  .contact-inner { display: flex; justify-content: space-between; align-items: flex-end; }
+  .contact-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(3rem, 6vw, 6rem); line-height: 0.9; }
+  .contact-title span { color: var(--gold); }
+  .contact-right { display: flex; flex-direction: column; gap: 1rem; align-items: flex-end; text-align: right; }
+  .contact-note { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.1em; color: var(--dim); }
+  .btn { display: inline-block; font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; text-decoration: none; color: var(--bg); background: var(--white); padding: 0.85rem 1.8rem; transition: background 0.2s, color 0.2s; border: none; cursor: pointer; }
+  .btn:hover { background: var(--gold); color: var(--bg); }
+  .btn-outline { background: transparent; color: var(--white); border: 1px solid var(--border); }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); background: transparent; }
+  .contact-links { display: flex; gap: 1.5rem; }
+  .contact-link { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.1em; color: var(--dim); text-decoration: none; transition: color 0.2s; }
+  .contact-link:hover { color: var(--white); }
+
+  /* ── FOOTER ── */
+  footer { padding: 1.5rem 3rem; display: flex; justify-content: space-between; align-items: center; }
+  footer span { font-family: 'DM Mono', monospace; font-size: 0.58rem; letter-spacing: 0.1em; color: var(--dim); }
+
+  /* ── REVEAL ── */
+  .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.55s ease, transform 0.55s ease; }
+  .reveal.visible { opacity: 1; transform: none; }
+  @keyframes up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    nav { padding: 1.1rem 1.5rem; }
+    .nav-links { display: none; }
+    .hero { padding: 0 1.5rem 4rem; }
+    section { padding: 4rem 1.5rem; }
+    .collab-grid, .platform-grid, .about-grid, .create-grid, .gear-grid { grid-template-columns: 1fr; }
+    .form-grid { grid-template-columns: 1fr; }
+    .hero-row { flex-direction: column; gap: 2rem; align-items: flex-start; }
+    .contact-inner { flex-direction: column; gap: 2.5rem; align-items: flex-start; }
+    .contact-right { align-items: flex-start; text-align: left; }
+    footer { flex-direction: column; gap: 0.4rem; padding: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Agastya Singh Rathore</div>
+  <div class="nav-right">
+    <div class="nav-links">
+      <a href="#create">Content</a>
+      <a href="#collabs">Collabs</a>
+      <a href="#gear">Gear</a>
+      <a href="#inquiry">Work With Me</a>
+    </div>
+    <button class="theme-btn" id="themeBtn" title="Toggle theme" aria-label="Toggle dark/light mode"></button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <p class="hero-eyebrow">Content Creator · Jaipur, India</p>
+  <h1 class="hero-name">Agastya<br>Singh<br>Rathore</h1>
+  <div class="hero-row">
+    <p class="hero-bio">14-year-old content creator from Jaipur. Growing a real audience and working with global automotive brands — BMW and Mercedes-Benz.</p>
+    <div class="hero-stats">
+      <div><span class="stat-num">10K</span><span class="stat-label">Instagram</span></div>
+      <div><span class="stat-num">500+</span><span class="stat-label">YouTube</span></div>
+      <div><span class="stat-num">2</span><span class="stat-label">Brand Deals</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-track">
+    <span class="ticker-item hl">BMW</span><span class="ticker-item">·</span>
+    <span class="ticker-item hl">Mercedes-Benz</span><span class="ticker-item">·</span>
+    <span class="ticker-item">Content Creator</span><span class="ticker-item">·</span>
+    <span class="ticker-item">10K Instagram</span><span class="ticker-item">·</span>
+    <span class="ticker-item">Jaipur, India</span><span class="ticker-item">·</span>
+    <span class="ticker-item">YouTube</span><span class="ticker-item">·</span>
+    <span class="ticker-item">14 Years Old</span><span class="ticker-item">·</span>
+    <span class="ticker-item hl">BMW</span><span class="ticker-item">·</span>
+    <span class="ticker-item hl">Mercedes-Benz</span><span class="ticker-item">·</span>
+    <span class="ticker-item">Content Creator</span><span class="ticker-item">·</span>
+    <span class="ticker-item">10K Instagram</span><span class="ticker-item">·</span>
+    <span class="ticker-item">Jaipur, India</span><span class="ticker-item">·</span>
+    <span class="ticker-item">YouTube</span><span class="ticker-item">·</span>
+    <span class="ticker-item">14 Years Old</span><span class="ticker-item">·</span>
+  </div>
+</div>
+
+<!-- WHAT I CREATE -->
+<section id="create">
+  <p class="label reveal">What I Make</p>
+  <h2 class="section-title reveal">The Content</h2>
+  <div class="create-grid">
+    <div class="create-card reveal">
+      <span class="create-emoji">🚗</span>
+      <div class="create-name">Car Content</div>
+      <p class="create-desc">Reviews, walkarounds, and exclusive access to luxury vehicles — BMW, Mercedes, and beyond. Real takes, no script.</p>
+    </div>
+    <div class="create-card reveal">
+      <span class="create-emoji">🎥</span>
+      <div class="create-name">Vlogs</div>
+      <p class="create-desc">Day-in-the-life content from Jaipur — events, brand visits, behind-the-scenes moments that most people never see.</p>
+    </div>
+    <div class="create-card reveal">
+      <span class="create-emoji">📱</span>
+      <div class="create-name">Reels & Shorts</div>
+      <p class="create-desc">Fast, punchy short-form content optimised for Instagram and YouTube Shorts — made to stop the scroll.</p>
+    </div>
+  </div>
+</section>
+
+<!-- YOUTUBE EMBED -->
+<section class="yt-section" id="watch">
+  <p class="label reveal">Latest Video</p>
+  <h2 class="section-title reveal">Watch My<br>Latest</h2>
+  <div class="yt-wrap reveal">
+    <iframe
+      src="https://www.youtube.com/embed?listType=user_uploads&list=agastyamakevlogs&index=1"
+      title="Agastya Make Vlogs — Latest Video"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen>
+    </iframe>
+  </div>
+  <div class="yt-meta reveal">
+    <span class="yt-channel">@agastyamakevlogs</span>
+    <a href="https://www.youtube.com/@agastyamakevlogs" target="_blank" class="yt-link">View Channel ↗</a>
+  </div>
+</section>
+
+<!-- COLLABS -->
+<section id="collabs">
+  <p class="label reveal">Brand Collaborations</p>
+  <h2 class="section-title reveal">Who I've<br>Worked With</h2>
+  <div class="collab-grid">
+
+    <!-- BMW -->
+    <div class="collab-card reveal">
+      <div class="logo-wrap">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <defs><clipPath id="inner-clip"><circle cx="100" cy="100" r="72"/></clipPath></defs>
+          <circle cx="100" cy="100" r="97" fill="none" stroke="#b0b0b0" stroke-width="6"/>
+          <circle cx="100" cy="100" r="73" fill="none" stroke="#c8c8c8" stroke-width="3"/>
+          <g clip-path="url(#inner-clip)">
+            <rect x="28" y="28" width="72" height="72" fill="#ffffff"/>
+            <rect x="100" y="28" width="72" height="72" fill="#1c469b"/>
+            <rect x="28" y="100" width="72" height="72" fill="#1c469b"/>
+            <rect x="100" y="100" width="72" height="72" fill="#ffffff"/>
+          </g>
+          <line x1="100" y1="28" x2="100" y2="172" stroke="#c8c8c8" stroke-width="4"/>
+          <line x1="28" y1="100" x2="172" y2="100" stroke="#c8c8c8" stroke-width="4"/>
+          <text x="100" y="194" text-anchor="middle" font-family="'Bebas Neue', Arial Narrow, sans-serif" font-size="16" fill="#c8c8c8" letter-spacing="7">BMW</text>
+        </svg>
+      </div>
+      <div class="collab-body">
+        <div class="collab-brand">BMW</div>
+        <div class="collab-origin">Bayerische Motoren Werke · Munich, Germany</div>
+        <p class="collab-desc">Collaborated with one of the world's most recognisable luxury automotive brands — content creation and brand representation.</p>
+        <div class="collab-tags"><span class="tag">Automotive</span><span class="tag">Content</span><span class="tag">Luxury</span></div>
+      </div>
+    </div>
+
+    <!-- MERCEDES -->
+    <div class="collab-card reveal">
+      <div class="logo-wrap">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="100" cy="100" r="97" fill="none" stroke="#b0b0b0" stroke-width="6"/>
+          <circle cx="100" cy="100" r="72" fill="#1a1a1a"/>
+          <circle cx="100" cy="100" r="72" fill="none" stroke="#c8c8c8" stroke-width="3"/>
+          <polygon points="100,30 107.5,98 100,102 92.5,98" fill="#d0d0d0"/>
+          <polygon points="162,144 102,98 100,102 101.5,106" fill="#d0d0d0"/>
+          <polygon points="38,144 98,98 100,102 98.5,106" fill="#d0d0d0"/>
+          <circle cx="100" cy="100" r="9" fill="#d0d0d0"/>
+          <polygon points="100,30 107.5,98 162,144 100,102 38,144 92.5,98" fill="none" stroke="#888" stroke-width="1.5" stroke-linejoin="round"/>
+          <path id="m-arc" d="M 24,126 A 78 78 0 0 0 176,126" fill="none"/>
+          <text font-family="'DM Mono', monospace" font-size="10" fill="#888" letter-spacing="4"><textPath href="#m-arc" startOffset="7%">MERCEDES-BENZ</textPath></text>
+        </svg>
+      </div>
+      <div class="collab-body">
+        <div class="collab-brand">Mercedes</div>
+        <div class="collab-origin">Mercedes-Benz · Stuttgart, Germany</div>
+        <p class="collab-desc">Partnered with the pinnacle of German engineering — delivering premium lifestyle content to an engaged and growing audience.</p>
+        <div class="collab-tags"><span class="tag">Automotive</span><span class="tag">Lifestyle</span><span class="tag">Premium</span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <p class="label reveal">About</p>
+  <div class="about-grid">
+    <div class="about-num reveal">14</div>
+    <div>
+      <h2 class="section-title reveal">The Story<br>So Far</h2>
+      <p class="about-text reveal">I'm <strong>Agastya Singh Rathore</strong>, a 14-year-old content creator from Jaipur, Rajasthan. While most people my age are still figuring things out, I'm already working with global automotive brands, growing a real social following, and telling stories people actually watch.</p>
+      <ul class="facts reveal">
+        <li>Based in Jaipur, Rajasthan</li>
+        <li>Creating content since age 13</li>
+        <li>Collaborated with BMW &amp; Mercedes-Benz</li>
+        <li>10,000+ followers on Instagram</li>
+        <li>Cars, lifestyle &amp; visual storytelling</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- GEAR -->
+<section id="gear">
+  <p class="label reveal">My Setup</p>
+  <h2 class="section-title reveal">What I<br>Shoot With</h2>
+  <div class="gear-grid">
+    <div class="gear-row reveal">
+      <div><div class="gear-category">Camera</div><div class="gear-name">iPhone 17 Pro</div></div>
+      <span class="gear-icon">📷</span>
+    </div>
+    <div class="gear-row reveal">
+      <div><div class="gear-category">Microphone</div><div class="gear-name">Rode Wireless GO II</div></div>
+      <span class="gear-icon">🎙️</span>
+    </div>
+    <div class="gear-row reveal">
+      <div><div class="gear-category">Stabiliser</div><div class="gear-name">DJI OM SE</div></div>
+      <span class="gear-icon">🎬</span>
+    </div>
+    <div class="gear-row reveal">
+      <div><div class="gear-category">Editing</div><div class="gear-name">Premiere Pro</div></div>
+      <span class="gear-icon">💻</span>
+    </div>
+    <div class="gear-row reveal">
+      <div><div class="gear-category">Drone</div><div class="gear-name">DJI Mini 4 Pro</div></div>
+      <span class="gear-icon">🚁</span>
+    </div>
+  </div>
+  <p style="font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.1em;color:var(--dim);margin-top:1rem;" class="reveal">* Gear list is approximate — update it to match your actual setup!</p>
+</section>
+
+<!-- PLATFORMS -->
+<section id="platforms">
+  <p class="label reveal">Platforms</p>
+  <h2 class="section-title reveal">Where You'll<br>Find Me</h2>
+  <div class="platform-grid">
+    <div class="platform-card reveal">
+      <p class="platform-name">YouTube</p>
+      <div class="platform-num">500+</div>
+      <p class="platform-sub">Subscribers &amp; growing</p>
+    </div>
+    <div class="platform-card reveal">
+      <p class="platform-name">Instagram</p>
+      <div class="platform-num">10K</div>
+      <p class="platform-sub">Followers · Active community</p>
+    </div>
+  </div>
+</section>
+
+<!-- COLLAB INQUIRY FORM -->
+<section class="form-section" id="inquiry">
+  <p class="label reveal">Work With Me</p>
+  <h2 class="section-title reveal">Got a Collab<br>in Mind?</h2>
+  <form id="collabForm">
+    <div class="form-grid">
+      <div class="form-group reveal">
+        <label class="form-label" for="f-name">Your Name</label>
+        <input class="form-input" id="f-name" type="text" placeholder="e.g. Rahul Sharma" required>
+      </div>
+      <div class="form-group reveal">
+        <label class="form-label" for="f-brand">Brand / Company</label>
+        <input class="form-input" id="f-brand" type="text" placeholder="e.g. XYZ Motors" required>
+      </div>
+      <div class="form-group reveal">
+        <label class="form-label" for="f-email">Email</label>
+        <input class="form-input" id="f-email" type="email" placeholder="hello@brand.com" required>
+      </div>
+      <div class="form-group reveal">
+        <label class="form-label" for="f-type">Collab Type</label>
+        <select class="form-select" id="f-type">
+          <option value="">Select a type…</option>
+          <option>Car Review / Feature</option>
+          <option>Brand Integration (YouTube)</option>
+          <option>Instagram Reel / Post</option>
+          <option>Event Coverage</option>
+          <option>Long-term Partnership</option>
+          <option>Something Else</option>
+        </select>
+      </div>
+      <div class="form-group full reveal">
+        <label class="form-label" for="f-msg">Tell Me More</label>
+        <textarea class="form-textarea" id="f-msg" placeholder="What's the idea? What's the timeline? Any details help…"></textarea>
+      </div>
+      <div class="form-bottom reveal">
+        <span class="form-note">I'll get back within 48 hrs · asr@agastya.sbs</span>
+        <button type="submit" class="btn">Send Inquiry →</button>
+      </div>
+      <div class="form-success" id="formSuccess">
+        ✦ Message received! I'll be in touch within 48 hours.
+      </div>
+    </div>
+  </form>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-inner">
+    <div>
+      <p class="label reveal">Direct Contact</p>
+      <h2 class="contact-title reveal">Let's Work<br><span>Together</span></h2>
+    </div>
+    <div class="contact-right reveal">
+      <p class="contact-note">Open to brand deals, collabs &amp; partnerships</p>
+      <div class="contact-links">
+        <a href="https://www.instagram.com/agastyarathoree" class="contact-link" target="_blank">Instagram ↗</a>
+        <a href="https://www.youtube.com/@agastyamakevlogs" class="contact-link" target="_blank">YouTube ↗</a>
+      </div>
+      <a href="mailto:asr@agastya.sbs" class="btn">asr@agastya.sbs</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span>Agastya Singh Rathore · Jaipur, India</span>
+  <span>© 2025</span>
+</footer>
+
+<script>
+  /* ── THEME TOGGLE ── */
+  const btn = document.getElementById('themeBtn');
+  const html = document.documentElement;
+  const saved = localStorage.getItem('theme') || 'dark';
+  html.setAttribute('data-theme', saved);
+  btn.addEventListener('click', () => {
+    const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  });
+
+  /* ── SCROLL REVEAL ── */
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) setTimeout(() => e.target.classList.add('visible'), i * 55);
+    });
+  }, { threshold: 0.08 });
+  reveals.forEach(el => io.observe(el));
+
+  /* ── SMOOTH SCROLL ── */
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      document.querySelector(a.getAttribute('href'))?.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+
+  /* ── FORM SUBMIT ── */
+  document.getElementById('collabForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const form = e.target;
+    const name = document.getElementById('f-name').value;
+    const brand = document.getElementById('f-brand').value;
+    const email = document.getElementById('f-email').value;
+    const type = document.getElementById('f-type').value;
+    const msg = document.getElementById('f-msg').value;
+    // Build mailto link
+    const subject = encodeURIComponent(`Collab Inquiry from ${brand}`);
+    const body = encodeURIComponent(`Name: ${name}\nBrand: ${brand}\nEmail: ${email}\nType: ${type}\n\nMessage:\n${msg}`);
+    window.location.href = `mailto:asr@agastya.sbs?subject=${subject}&body=${body}`;
+    document.getElementById('formSuccess').style.display = 'block';
+    form.reset();
+  });
+</script>
+</body>
+</html>
